@@ -1,24 +1,70 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
+import api from './api'
+import Toast from 'react-native-toast-message'
+import BackButton from "../components/BackButton";
+import Button from "../components/Button";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 export default function Register() {
   const router = useRouter();
-
   const [checked, setChecked] = useState(false);
+  const [name,setName]=useState('')
+  const [email,setEmail]=useState('')
+  const [password,setPassword]=useState('')
+  const [confirmPassword,setConfirmPassword]=useState('')
+  const [laoding,setLoading]=useState(false)
+
+  const register = async()=>{
+    if (!(name && email && password && confirmPassword && checked && password===confirmPassword)) {
+      return Toast.show({
+        type:"error",
+        text1:"Error",
+        text2:"All field are required"
+      })
+    }
+    try{
+        setLoading(true)   
+        await api.post('/auth/register',{
+          name,
+          email,
+          password
+        })
+        Toast.show({
+          type: "success",
+          text1: "Success",
+          text2: "Registered successfully",
+        });
+        router.push("/login")
+
+    }catch(err:any){
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: err.response?.data?.message || "Something went wrong",
+        });
+        console.log(`Failed to register user : ${err.response?.data || err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  } 
+  
 
   return (
     <View style={styles.container}>
-      
-      <TouchableOpacity onPress={() => router.back()}>
-        <Text style={styles.back}>←</Text>
-      </TouchableOpacity>
+
+      {laoding && <LoadingOverlay/>}
+
+      <BackButton/>      
 
       <Text style={styles.title}>Create Account</Text>
 
-      <Text style={styles.label}>Full Name</Text>
+      <Text style={styles.label}>Name</Text>
+
       <TextInput
+        value={name}
+        onChangeText={setName}
         placeholder="John Doe"
         placeholderTextColor="#6B7280"
         style={styles.input}
@@ -26,6 +72,8 @@ export default function Register() {
 
       <Text style={styles.label}>Email Address</Text>
       <TextInput
+        value={email}
+        onChangeText={setEmail}
         placeholder="you@company.com"
         placeholderTextColor="#6B7280"
         style={styles.input}
@@ -33,6 +81,8 @@ export default function Register() {
 
       <Text style={styles.label}>Password</Text>
       <TextInput
+        value={password}
+        onChangeText={setPassword}
         secureTextEntry
         placeholder="••••••••••"
         placeholderTextColor="#6B7280"
@@ -41,6 +91,8 @@ export default function Register() {
 
       <Text style={styles.label}>Confirm Password</Text>
       <TextInput
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
         secureTextEntry
         placeholder="••••••••••"
         placeholderTextColor="#6B7280"
@@ -57,22 +109,15 @@ export default function Register() {
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.replace("/(tabs)/home")}>
-        <LinearGradient
-          colors={["#7C5CFF", "#9B8AFB"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Create Account</Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      <Button title="Create Account" method={register}/>
 
-      <TouchableOpacity onPress={() => router.push("/login")}>
+      <TouchableOpacity onPress={()=>router.push("/login")}>
         <Text style={styles.loginText}>
           Already have an account? <Text style={styles.loginLink}>Sign In</Text>
         </Text>
       </TouchableOpacity>
+      
+      <Toast/>
 
     </View>
   );
@@ -84,12 +129,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#050E1F",
     padding: 24,
     justifyContent: "center",
-  },
-
-  back: {
-    fontSize: 22,
-    color: "#E5E7EB",
-    marginBottom: 10,
   },
 
   title: {
@@ -138,19 +177,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  button: {
-    marginTop: 20,
-    padding: 16,
-    borderRadius: 14,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-
   loginText: {
     color: "#9CA3AF",
     textAlign: "center",
@@ -159,5 +185,10 @@ const styles = StyleSheet.create({
 
   loginLink: {
     color: "#7C5CFF",
+  },
+
+  toast:{
+    backgroundColor: "#050E1F",
+    color:"#ffffff"
   },
 });

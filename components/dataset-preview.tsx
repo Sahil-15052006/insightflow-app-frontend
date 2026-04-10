@@ -1,8 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
+import Button from "@/components/Button";
 
-export default function DatasetPreview() {
+export default function DatasetPreview(data2:any) {
   const router = useRouter();
 
   const data = [
@@ -18,10 +19,6 @@ export default function DatasetPreview() {
       
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.back}>←</Text>
-        </TouchableOpacity>
-
         <Text style={styles.title}>Dataset Preview</Text>
       </View>
 
@@ -46,29 +43,7 @@ export default function DatasetPreview() {
         ))}
 
       </View>
-
-      {/* Buttons */}
-      <View style={styles.buttons}>
-
-        <TouchableOpacity 
-            style={{ flex: 1 }}
-            onPress={()=>router.replace("/(analysis)/dashboard")}>
-            <LinearGradient
-                colors={["#7C5CFF", "#9B8AFB"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.analyzeBtn}
-            >
-                <Text style={styles.analyzeText}>Analyze Data</Text>
-            </LinearGradient>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.editBtn}>
-          <Text style={styles.editText}>Edit</Text>
-        </TouchableOpacity>
-
-      </View>
-
+      <Button title="Analyze Data" method={()=>router.push('/(analysis)/dashboard')}/>
     </View>
   );
 }
@@ -77,7 +52,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#050E1F",
-    padding: 20,
   },
 
   header: {
@@ -87,11 +61,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  back: {
-    fontSize: 22,
-    color: "#E5E7EB",
-    marginRight: 10,
-  },
 
   title: {
     fontSize: 18,

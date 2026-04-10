@@ -1,18 +1,37 @@
 import { View, Text, StyleSheet } from "react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import * as SecureStore from 'expo-secure-store'
+import api from "./api";
 
 export default function SplashScreen() {
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      router.replace("/login"); // go to login screen
-    }, 2500);
 
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    checkToken()
   }, []);
+
+  const checkToken = async()=>{
+    const token = await SecureStore.getItemAsync("token")
+
+    if (!token) return setTimeout(() => {
+        router.replace('/login')
+      }, 3000);
+
+    try{
+      await api.get('/auth/verify');
+      setTimeout(() => {
+        router.replace('/(tabs)/home')
+      }, 3000);
+    } catch {
+      await SecureStore.deleteItemAsync("token")
+      setTimeout(() => {
+        router.replace('/login')
+      }, 3000);
+    }
+  }
 
   return (
     <LinearGradient
@@ -29,13 +48,9 @@ export default function SplashScreen() {
         Data Analytics Platform
       </Text>
 
-      {/* <Text style={styles.aiText}>
+      <Text style={styles.aiText}>
         Powered by AI Intelligence
       </Text>
-
-      <View style={styles.loader}>
-        <View style={styles.loaderFill} />
-      </View> */}
 
     </LinearGradient>
   );
