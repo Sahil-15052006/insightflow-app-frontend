@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
+import { TouchableOpacity, Text, View } from "react-native";
 
 type Props ={
     title:string,
@@ -7,37 +7,12 @@ type Props ={
 
 export default function UploadButton({ title, onPress }: Props) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
-      <View style={styles.content}>
-        <Text style={styles.text}>
+    <TouchableOpacity className="rounded-xl border-2 border-[#2196F3] bg-[#2196F3]/10 p-4" onPress={onPress}>
+      <View className="flex-row items-center justify-center gap-2.5">
+        <Text className="text-[15px] font-semibold text-[#2196F3]">
           {title}
         </Text>
       </View>
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderWidth: 2,
-    borderColor: "#2196F3",
-    borderStyle: "solid", 
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: "rgba(33,150,243,0.08)", 
-  },
-  content: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 10,
-  },
-  icon: {
-    fontSize: 20,
-  },
-  text: {
-    color: "#2196F3",
-    fontSize: 15,
-    fontWeight: "600",
-  },
-});

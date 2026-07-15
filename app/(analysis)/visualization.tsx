@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import { View, Text, ScrollView, Dimensions } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 
 const screenWidth = Dimensions.get("window").width;
@@ -40,17 +40,15 @@ export default function Visualization() {
   ];
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#050E1F] p-2.5">
 
-        <Text style={styles.title}>Visualizations</Text>
+        <Text className="my-[25px] px-2.5 text-2xl font-semibold text-[#E5E7EB]">Visualizations</Text>
 
-        <ScrollView style={styles.Cardcontainer} >
+        <ScrollView className="flex-1 bg-[#050E1F] px-[5px] pb-[100px]" >
 
             {/* Bar Chart */}
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Sales by Region</Text>
-                <Text style={styles.cardType}>Bar Chart</Text>
+            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
+                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Sales by Region</Text><Text className="text-xs text-[#9CA3AF]">Bar Chart</Text>
                 </View>
 
                 <BarChart
@@ -60,15 +58,13 @@ export default function Visualization() {
                 yAxisLabel="$"
                 yAxisSuffix=""
                 chartConfig={chartConfig}
-                style={styles.chart}
+                style={{ borderRadius: 12, padding: 2 }}
                 />
             </View>
 
             {/* Line Chart */}
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Trend Analysis</Text>
-                <Text style={styles.cardType}>Line Chart</Text>
+            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
+                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Trend Analysis</Text><Text className="text-xs text-[#9CA3AF]">Line Chart</Text>
                 </View>
 
                 <LineChart
@@ -76,15 +72,13 @@ export default function Visualization() {
                 width={screenWidth - 60}
                 height={180}
                 chartConfig={chartConfig}
-                style={styles.chart}
+                style={{ borderRadius: 12, padding: 2 }}
                 />
             </View>
 
             {/* Pie Chart */}
-            <View style={styles.card}>
-                <View style={styles.cardHeader}>
-                <Text style={styles.cardTitle}>Category Distribution</Text>
-                <Text style={styles.cardType}>Pie Chart</Text>
+            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
+                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Category Distribution</Text><Text className="text-xs text-[#9CA3AF]">Pie Chart</Text>
                 </View>
 
                 <PieChart
@@ -120,57 +114,3 @@ const chartConfig = {
     stroke: "#7C5CFF",
   },
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-    padding: 10,
-  },
-  
-  Cardcontainer: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-    paddingHorizontal: 5,
-    paddingBottom:100,
-  },
-
-  title: {
-    color: "#E5E7EB",
-    fontSize: 24,
-    fontWeight: "600",
-    marginVertical:25,
-    paddingHorizontal:10,
-  },
-
-  card: {
-    backgroundColor: "#0F1A33",
-    width:"auto",
-    borderRadius: 14,
-    justifyContent:"center",
-    alignItems:"stretch",
-    padding: 10,
-    marginBottom: 10,
-  },
-
-  cardHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 10,
-  },
-
-  cardTitle: {
-    color: "#E5E7EB",
-    fontWeight: "600",
-  },
-
-  cardType: {
-    color: "#9CA3AF",
-    fontSize: 12,
-  },
-
-  chart: {
-    borderRadius: 12,
-    padding:2
-  },
-});

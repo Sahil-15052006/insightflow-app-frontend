@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import Button from '../components/Button';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -8,11 +8,15 @@ import Toast from 'react-native-toast-message';
 import * as SecureStore from 'expo-secure-store';
 
 const getErrorMessage = (error: any) => {
-  if (!error?.response) {
+  if (error instanceof Error && error.name !== 'TypeError') {
+    return error.message;
+  }
+
+  if (error?.name === 'TypeError') {
     return 'Cannot reach the server. Check that the backend is running and the API URL is correct.';
   }
 
-  return error.response.data?.message || 'Something went wrong. Please try again.';
+  return 'Something went wrong. Please try again.';
 };
 
 export default function Login() {
@@ -41,11 +45,11 @@ export default function Login() {
         password,
       });
 
-      if (!res.data?.token) {
+      if (!res?.token) {
         throw new Error('Login response did not include a token');
       }
 
-      await SecureStore.setItemAsync("token", res.data.token);
+      await SecureStore.setItemAsync("token", res.token);
       Toast.show({
         type: "success",
         text1: "Success",
@@ -68,11 +72,11 @@ export default function Login() {
       setLoading(true)
       const res = await api.post('/auth/guest');
 
-      if (!res.data?.token) {
+      if (!res?.token) {
         throw new Error('Guest login response did not include a token');
       }
 
-      await SecureStore.setItemAsync('token', res.data.token);
+      await SecureStore.setItemAsync('token', res.token);
             Toast.show({
         type: "success",
         text1: "Success",
@@ -91,11 +95,11 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 justify-center bg-[#0A0F1E] p-6">
       
       {loading && <LoadingOverlay />}
 
-      <Text style={styles.title}>InsightFlow</Text>
+      <Text className="mb-[30px] text-center text-[28px] font-bold text-[#E5E7EB]">InsightFlow</Text>
 
       <TextInput
         value={email}
@@ -105,7 +109,7 @@ export default function Login() {
         autoCapitalize="none"
         autoCorrect={false}
         keyboardType="email-address"
-        style={styles.input}
+        className="mb-4 rounded-xl bg-[#111827] p-[14px] text-[#E5E7EB]"
         />
 
       <TextInput
@@ -114,83 +118,28 @@ export default function Login() {
         placeholder="Password"
         placeholderTextColor="#6B7280"
         secureTextEntry
-        style={styles.input}
+        className="mb-4 rounded-xl bg-[#111827] p-[14px] text-[#E5E7EB]"
         />
 
       <Button title='Sign In' method={login} />
 
-      <TouchableOpacity onPress={() => router.push("/register")}>
-        <Text style={styles.registerText}>
+      <TouchableOpacity onPress={() => router.replace("/register")}>
+        <Text className="mt-[18px] text-center text-[#9CA3AF]">
           Don&apos;t have an account?{" "}
-          <Text style={styles.registerLink}>Create Account</Text>
+          <Text className="font-medium text-[#7C5CFF]">Create Account</Text>
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.guestButton}
+        className="mt-[14px] items-center rounded-[14px] border border-[#7C5CFF] p-[14px]"
         onPress={guest}>
-        <Text style={styles.guestText}>Continue as Guest</Text>
+        <Text className="font-medium text-[#7C5CFF]">Continue as Guest</Text>
       </TouchableOpacity>
 
-      <Text style={styles.registerText}>
+      <Text className="mt-[18px] text-center text-[#9CA3AF]">
           Guest account will be automatically deleted after 24 hours and will be not accessible after user logged out
       </Text>
       <Toast/>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0A0F1E',
-    justifyContent: 'center',
-    padding: 24,
-  },
-
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: '#E5E7EB',
-    marginBottom: 30,
-    textAlign: 'center',
-  },
-
-  input: {
-    backgroundColor: '#111827',
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 16,
-    color: '#E5E7EB',
-  },
-
-  buttonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-
-  registerText: {
-    color: "#9CA3AF",
-    textAlign: "center",
-    marginTop: 18,
-  },
-
-  registerLink: {
-    color: "#7C5CFF",
-    fontWeight: "500",
-  },
-
-  guestButton: {
-    marginTop: 14,
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#7C5CFF",
-    alignItems: "center",
-  },
-
-  guestText: {
-    color: "#7C5CFF",
-    fontWeight: "500",
-  },
-});

@@ -1,6 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Button } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { View, Text } from "react-native";
 import api from "../api";
 import * as DocumentPicker from "expo-document-picker"
 import { useEffect, useState } from "react";
@@ -24,7 +22,7 @@ export default function Home() {
 
   const getUserData = async()=>{
     const res= await api.get('/userInfo')
-    setUserName(res.data.user.name)
+    setUserName(res.user.name)
   }
 
   const selectFile=async()=>{
@@ -63,11 +61,7 @@ const uploadFile = async () => {
     try {
       setLoading(true);
 
-      const res = await fetch(`http://10.188.123.16:5000/uploadFile/upload`,{
-        method:'POST',
-        body:formData
-      })
-      const jsonData = await res.json()
+      const jsonData = await api.upload('/uploadFile/upload', formData);
       setData(jsonData.cleanedData);
       console.log(jsonData.cleanedData);
 
@@ -79,16 +73,16 @@ const uploadFile = async () => {
 };
   
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#050E1F] p-5">
 
       {loading && <LoadingOverlay/>}
 
-      <View style={styles.header}>
-        <Text style={styles.welcome}>Welcome</Text>
-        <Text style={styles.name}>{userName} 👋</Text>
+      <View className="relative mb-[30px] mt-10">
+        <Text className="text-sm text-[#9CA3AF]">Welcome</Text>
+        <Text className="text-[22px] font-semibold text-[#E5E7EB]">{userName} 👋</Text>
 
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{userName[0]}</Text>
+        <View className="absolute right-0 top-0 h-9 w-9 items-center justify-center rounded-full bg-[#7C5CFF]">
+          <Text className="font-semibold text-white">{userName[0]}</Text>
         </View>
       </View>
 
@@ -105,56 +99,3 @@ const uploadFile = async () => {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-    padding: 20,
-  },
-
-  header: {
-    marginTop: 40,
-    marginBottom: 30,
-  },
-
-  welcome: {
-    color: "#9CA3AF",
-    fontSize: 14,
-  },
-
-  name: {
-    color: "#E5E7EB",
-    fontSize: 22,
-    fontWeight: "600",
-  },
-
-  avatar: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: "#7C5CFF",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  avatarText: {
-    color: "white",
-    fontWeight: "600",
-  },
-
-  uploadButton: {
-    marginTop:20,
-    padding: 16,
-    borderRadius: 14,
-    alignItems: "center",
-  },
-
-  uploadText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-});

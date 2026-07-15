@@ -1,144 +1,46 @@
-import { View, Text, StyleSheet, ScrollView, TextInput } from "react-native";
+import { View, Text, ScrollView, TextInput } from "react-native";
 
 export default function AnalysisHistory() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView className="flex-1 bg-[#050E1F] p-5">
 
       {/* Header */}
-      <Text style={styles.title}>Analysis History</Text>
+      <Text className="my-[25px] text-[22px] font-semibold text-[#E5E7EB]">Analysis History</Text>
 
       {/* Search */}
       <TextInput
         placeholder="Search datasets..."
         placeholderTextColor="#6B7280"
-        style={styles.search}
+        className="mb-5 rounded-xl border border-[#1F2A44] bg-[#0F1A33] p-3 text-[#E5E7EB]"
       />
 
       {/* Card 1 */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Q4 Sales Analysis</Text>
-        <Text style={styles.cardMeta}>5 charts • 8 insights</Text>
+      <View className="mb-[14px] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-base font-semibold text-[#E5E7EB]">Q4 Sales Analysis</Text><Text className="mt-1 text-[#9CA3AF]">5 charts • 8 insights</Text>
 
-        <View style={styles.tags}>
-          <Text style={styles.tag}>Sales</Text>
-          <Text style={styles.tag}>Revenue</Text>
+        <View className="mt-2.5 flex-row"><Text className="mr-1.5 rounded-md bg-[#7C5CFF] px-2 py-[3px] text-[10px] text-white">Sales</Text><Text className="mr-1.5 rounded-md bg-[#7C5CFF] px-2 py-[3px] text-[10px] text-white">Revenue</Text>
         </View>
 
-        <Text style={styles.time}>2h ago</Text>
+        <Text className="mt-2.5 text-xs text-[#6B7280]">2h ago</Text>
       </View>
 
       {/* Card 2 */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Customer Segmentation</Text>
-        <Text style={styles.cardMeta}>3 charts • 5 insights</Text>
+      <View className="mb-[14px] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-base font-semibold text-[#E5E7EB]">Customer Segmentation</Text><Text className="mt-1 text-[#9CA3AF]">3 charts • 5 insights</Text>
 
-        <View style={styles.tags}>
-          <Text style={styles.tagBlue}>Customers</Text>
-          <Text style={styles.tagBlue}>Demographics</Text>
+        <View className="mt-2.5 flex-row"><Text className="mr-1.5 rounded-md bg-[#3B82F6] px-2 py-[3px] text-[10px] text-white">Customers</Text><Text className="mr-1.5 rounded-md bg-[#3B82F6] px-2 py-[3px] text-[10px] text-white">Demographics</Text>
         </View>
 
-        <Text style={styles.time}>1d ago</Text>
+        <Text className="mt-2.5 text-xs text-[#6B7280]">1d ago</Text>
       </View>
 
       {/* Card 3 */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Marketing ROI</Text>
-        <Text style={styles.cardMeta}>4 charts • 6 insights</Text>
+      <View className="mb-[14px] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-base font-semibold text-[#E5E7EB]">Marketing ROI</Text><Text className="mt-1 text-[#9CA3AF]">4 charts • 6 insights</Text>
 
-        <View style={styles.tags}>
-          <Text style={styles.tagGreen}>Marketing</Text>
-          <Text style={styles.tagGreen}>ROI</Text>
+        <View className="mt-2.5 flex-row"><Text className="mr-1.5 rounded-md bg-[#22C55E] px-2 py-[3px] text-[10px] text-white">Marketing</Text><Text className="mr-1.5 rounded-md bg-[#22C55E] px-2 py-[3px] text-[10px] text-white">ROI</Text>
         </View>
 
-        <Text style={styles.time}>3d ago</Text>
+        <Text className="mt-2.5 text-xs text-[#6B7280]">3d ago</Text>
       </View>
 
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-    padding: 20,
-  },
-
-  title: {
-    color: "#E5E7EB",
-    fontSize: 22,
-    fontWeight: "600",
-    marginVertical: 25,
-  },
-
-  search: {
-    backgroundColor: "#0F1A33",
-    borderRadius: 12,
-    padding: 12,
-    color: "#E5E7EB",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#1F2A44",
-  },
-
-  card: {
-    backgroundColor: "#0F1A33",
-    borderRadius: 14,
-    padding: 16,
-    marginBottom: 14,
-  },
-
-  cardTitle: {
-    color: "#E5E7EB",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-
-  cardMeta: {
-    color: "#9CA3AF",
-    marginTop: 4,
-  },
-
-  tags: {
-    flexDirection: "row",
-    marginTop: 10,
-  },
-
-  tag: {
-    backgroundColor: "#7C5CFF",
-    color: "#fff",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    fontSize: 10,
-    marginRight: 6,
-  },
-
-  tagBlue: {
-    backgroundColor: "#3B82F6",
-    color: "#fff",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    fontSize: 10,
-    marginRight: 6,
-  },
-
-  tagGreen: {
-    backgroundColor: "#22C55E",
-    color: "#fff",
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    fontSize: 10,
-    marginRight: 6,
-  },
-
-  time: {
-    color: "#6B7280",
-    marginTop: 10,
-    fontSize: 12,
-  },
-
-});

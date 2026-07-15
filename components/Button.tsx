@@ -1,7 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, StyleSheet } from 'react-native'
-import { View } from 'react-native'
-import { useRouter } from 'expo-router'
+import { TouchableOpacity, Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 
 type Props = {
@@ -11,8 +9,6 @@ type Props = {
 
 export default function Button({title,method}:Props) {
 
-  const router = useRouter()
-
   return (
     <View>
         <TouchableOpacity onPress={method}>
@@ -20,26 +16,11 @@ export default function Button({title,method}:Props) {
                 colors={["#7C5CFF", "#9B8AFB"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={styles.button}
+                style={{ marginTop: 20, padding: 16, borderRadius: 14, alignItems: "center" }}
             >
-                <Text style={styles.buttonText}>{title}</Text>
+                <Text className="text-base font-semibold text-white">{title}</Text>
             </LinearGradient>
         </TouchableOpacity>
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  button: {
-    marginTop: 20,
-    padding: 16,
-    borderRadius: 14,
-    alignItems: "center",
-  },
-
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-})

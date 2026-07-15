@@ -1,5 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { View, Text } from "react-native";
 import { useRouter } from "expo-router";
 import Button from "@/components/Button";
 
@@ -15,30 +14,30 @@ export default function DatasetPreview(data2:any) {
   ];
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 bg-[#050E1F]">
       
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.title}>Dataset Preview</Text>
+      <View className="mb-5 mt-10 flex-row items-center">
+        <Text className="text-lg font-semibold text-[#E5E7EB]">Dataset Preview</Text>
       </View>
 
       {/* Table */}
-      <View style={styles.table}>
+      <View className="overflow-hidden rounded-xl bg-[#111B35]">
 
         {/* Table Header */}
-        <View style={styles.rowHeader}>
-          <Text style={styles.headerText}>ID</Text>
-          <Text style={styles.headerText}>Name</Text>
-          <Text style={styles.headerText}>Sales</Text>
-          <Text style={styles.headerText}>Date</Text>
+        <View className="flex-row bg-[#1E2A4A] p-3">
+          <Text className="flex-1 text-xs text-[#9CA3AF]">ID</Text>
+          <Text className="flex-1 text-xs text-[#9CA3AF]">Name</Text>
+          <Text className="flex-1 text-xs text-[#9CA3AF]">Sales</Text>
+          <Text className="flex-1 text-xs text-[#9CA3AF]">Date</Text>
         </View>
 
         {data.map((item, index) => (
-          <View key={index} style={styles.row}>
-            <Text style={styles.cell}>{item.id}</Text>
-            <Text style={styles.cell}>{item.name}</Text>
-            <Text style={styles.cell}>{item.sales}</Text>
-            <Text style={styles.cell}>{item.date}</Text>
+          <View key={index} className="flex-row border-t border-[#1F2A44] p-3">
+            <Text className="flex-1 text-[13px] text-[#E5E7EB]">{item.id}</Text>
+            <Text className="flex-1 text-[13px] text-[#E5E7EB]">{item.name}</Text>
+            <Text className="flex-1 text-[13px] text-[#E5E7EB]">{item.sales}</Text>
+            <Text className="flex-1 text-[13px] text-[#E5E7EB]">{item.date}</Text>
           </View>
         ))}
 
@@ -47,84 +46,3 @@ export default function DatasetPreview(data2:any) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-  },
-
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 40,
-    marginBottom: 20,
-  },
-
-
-  title: {
-    fontSize: 18,
-    color: "#E5E7EB",
-    fontWeight: "600",
-  },
-
-  table: {
-    backgroundColor: "#111B35",
-    borderRadius: 12,
-    overflow: "hidden",
-  },
-
-  rowHeader: {
-    flexDirection: "row",
-    padding: 12,
-    backgroundColor: "#1E2A4A",
-  },
-
-  headerText: {
-    flex: 1,
-    color: "#9CA3AF",
-    fontSize: 12,
-  },
-
-  row: {
-    flexDirection: "row",
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: "#1F2A44",
-  },
-
-  cell: {
-    flex: 1,
-    color: "#E5E7EB",
-    fontSize: 13,
-  },
-
-  buttons: {
-    flexDirection: "row",
-    marginTop: 24,
-    gap: 10,
-  },
-
-  analyzeBtn: {
-    padding: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-
-  analyzeText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-
-  editBtn: {
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: "#1F2A44",
-    alignItems: "center",
-    paddingHorizontal: 24,
-  },
-
-  editText: {
-    color: "#E5E7EB",
-  },
-});

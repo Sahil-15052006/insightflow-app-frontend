@@ -1,69 +1,48 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 
 export default function Dashboard() {
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView className="flex-1 bg-[#050E1F] p-5">
 
-      <Text style={styles.title}>Dashboard</Text>
+      <Text className="my-[25px] text-2xl font-semibold text-[#E5E7EB]">Dashboard</Text>
 
       {/* KPI Cards */}
-      <View style={styles.grid}>
+      <View className="flex-row flex-wrap justify-between">
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Total</Text>
-          <Text style={styles.cardValue}>14,450</Text>
-          <Text style={styles.cardGrowth}>↑ 12.5%</Text>
+        <View className="mb-[14px] w-[48%] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-xs text-[#9CA3AF]">Total</Text><Text className="mt-1.5 text-[22px] font-semibold text-[#E5E7EB]">14,450</Text><Text className="mt-1 text-[#22C55E]">↑ 12.5%</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Average</Text>
-          <Text style={styles.cardValue}>2,890</Text>
-          <Text style={styles.cardGrowth}>↑ 8.3%</Text>
+        <View className="mb-[14px] w-[48%] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-xs text-[#9CA3AF]">Average</Text><Text className="mt-1.5 text-[22px] font-semibold text-[#E5E7EB]">2,890</Text><Text className="mt-1 text-[#22C55E]">↑ 8.3%</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Maximum</Text>
-          <Text style={styles.cardValue}>4,210</Text>
-          <Text style={styles.cardSub}>Peak value</Text>
+        <View className="mb-[14px] w-[48%] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-xs text-[#9CA3AF]">Maximum</Text><Text className="mt-1.5 text-[22px] font-semibold text-[#E5E7EB]">4,210</Text><Text className="mt-1 text-[#9CA3AF]">Peak value</Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardLabel}>Minimum</Text>
-          <Text style={styles.cardValue}>1,890</Text>
-          <Text style={styles.cardSub}>Lowest value</Text>
+        <View className="mb-[14px] w-[48%] rounded-[14px] bg-[#0F1A33] p-4"><Text className="text-xs text-[#9CA3AF]">Minimum</Text><Text className="mt-1.5 text-[22px] font-semibold text-[#E5E7EB]">1,890</Text><Text className="mt-1 text-[#9CA3AF]">Lowest value</Text>
         </View>
 
       </View>
 
       {/* Performance Section */}
-      <View style={styles.performance}>
+      <View className="mt-5 rounded-[14px] bg-[#0F1A33] p-4">
 
-        <View style={styles.performanceHeader}>
-          <Text style={styles.performanceTitle}>
+        <View className="mb-[14px] flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">
             Performance Overview
           </Text>
 
-          <Text style={styles.viewAll}>View All</Text>
+          <Text className="text-[#7C5CFF]">View All</Text>
         </View>
 
-        <View style={styles.metricRow}>
-          <Text style={styles.metricLabel}>Completion Rate</Text>
-          <Text style={styles.metricValue}>75%</Text>
+        <View className="mt-2.5 flex-row justify-between"><Text className="text-[#9CA3AF]">Completion Rate</Text><Text className="text-[#E5E7EB]">75%</Text>
         </View>
 
-        <View style={styles.progressBackground}>
-          <View style={[styles.progressFill, { width: "75%" }]} />
+        <View className="mt-1.5 h-1.5 rounded-full bg-[#1F2A44]"><View className="h-1.5 w-3/4 rounded-full bg-[#7C5CFF]" />
         </View>
 
-        <View style={styles.metricRow}>
-          <Text style={styles.metricLabel}>Data Quality</Text>
-          <Text style={styles.metricValue}>92%</Text>
+        <View className="mt-2.5 flex-row justify-between"><Text className="text-[#9CA3AF]">Data Quality</Text><Text className="text-[#E5E7EB]">92%</Text>
         </View>
 
-        <View style={styles.progressBackground}>
-          <View
-            style={[styles.progressFillGreen, { width: "92%" }]}
-          />
+        <View className="mt-1.5 h-1.5 rounded-full bg-[#1F2A44]"><View className="h-1.5 w-[92%] rounded-full bg-[#22C55E]" />
         </View>
 
       </View>
@@ -71,110 +50,3 @@ export default function Dashboard() {
     </ScrollView>
   );
 }
-const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    backgroundColor: "#050E1F",
-    padding: 20,
-  },
-
-  title: {
-    color: "#E5E7EB",
-    fontSize: 24,
-    fontWeight: "600",
-    marginVertical:25,
-  },
-
-  grid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-
-  card: {
-    width: "48%",
-    backgroundColor: "#0F1A33",
-    padding: 16,
-    borderRadius: 14,
-    marginBottom: 14,
-  },
-
-  cardLabel: {
-    color: "#9CA3AF",
-    fontSize: 12,
-  },
-
-  cardValue: {
-    color: "#E5E7EB",
-    fontSize: 22,
-    fontWeight: "600",
-    marginTop: 6,
-  },
-
-  cardGrowth: {
-    color: "#22C55E",
-    marginTop: 4,
-  },
-
-  cardSub: {
-    color: "#9CA3AF",
-    marginTop: 4,
-  },
-
-  performance: {
-    marginTop: 20,
-    backgroundColor: "#0F1A33",
-    padding: 16,
-    borderRadius: 14,
-  },
-
-  performanceHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 14,
-  },
-
-  performanceTitle: {
-    color: "#E5E7EB",
-    fontWeight: "600",
-  },
-
-  viewAll: {
-    color: "#7C5CFF",
-  },
-
-  metricRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-
-  metricLabel: {
-    color: "#9CA3AF",
-  },
-
-  metricValue: {
-    color: "#E5E7EB",
-  },
-
-  progressBackground: {
-    height: 6,
-    backgroundColor: "#1F2A44",
-    borderRadius: 10,
-    marginTop: 6,
-  },
-
-  progressFill: {
-    height: 6,
-    backgroundColor: "#7C5CFF",
-    borderRadius: 10,
-  },
-
-  progressFillGreen: {
-    height: 6,
-    backgroundColor: "#22C55E",
-    borderRadius: 10,
-  },
-
-});
