@@ -1,54 +1,114 @@
 import { View, Text, ScrollView } from "react-native";
+import { useDataset } from "@/context/DatasetContext";
 
 export default function Insights() {
-  return (
-    <ScrollView className="flex-1 bg-[#050E1F] p-5">
+  const { uploadResponse } = useDataset();
 
+  const insights =
+    uploadResponse?.insights || [];
+
+  const totalRows =
+    uploadResponse?.data?.length || 0;
+
+  const totalColumns =
+    Object.keys(
+      uploadResponse?.schema || {}
+    ).length;
+
+  const groupedSchema =
+    uploadResponse?.groupedSchema || {};
+
+  const numericCount =
+    groupedSchema.numeric?.length || 0;
+
+  const categoricalCount =
+    (groupedSchema.categorical?.length || 0) +
+    (groupedSchema.boolean?.length || 0);
+
+  return (
+    <ScrollView
+      className="flex-1 bg-[#050E1F] p-5"
+      contentContainerStyle={{
+        paddingBottom: 120,
+      }}
+    >
       {/* Header */}
-      <View className="my-[25px] flex-row items-center"><View className="mr-2.5 h-10 w-10 items-center justify-center rounded-[10px] bg-[#7C5CFF]"><Text className="text-lg">💡</Text>
+      <View className="my-6 flex-row items-center">
+        <View className="mr-3 h-10 w-10 items-center justify-center rounded-xl bg-[#7C5CFF]">
+          <Text className="text-lg">
+            💡
+          </Text>
         </View>
 
         <View>
-          <Text className="text-lg font-semibold text-[#E5E7EB]">AI Generated Insights</Text>
+          <Text className="text-lg font-semibold text-white">
+            Dataset Insights
+          </Text>
+
           <Text className="text-xs text-[#9CA3AF]">
-            Powered by Machine Learning
+            Generated automatically
           </Text>
         </View>
       </View>
 
-      {/* Main Insight Card */}
-      <View className="mb-5 rounded-[14px] border border-[#7C5CFF] bg-[#0F1A33] p-[18px]">
+      {/* Dataset Overview */}
+      <View className="mb-5 rounded-2xl border border-[#7C5CFF] bg-[#0F1A33] p-5">
+        <Text className="mb-3 text-lg font-semibold text-white">
+          Dataset Overview
+        </Text>
 
-        <View className="mb-2.5 flex-row"><Text className="mr-1.5 rounded-md bg-[#22C55E] px-2 py-[3px] text-[10px] text-white">Growth</Text><Text className="rounded-md bg-[#7C5CFF] px-2 py-[3px] text-[10px] text-white">High Impact</Text>
+        <Text className="leading-6 text-[#E5E7EB]">
+          {totalRows} rows •{" "}
+          {totalColumns} columns
+        </Text>
+
+        <Text className="mt-2 text-[#9CA3AF]">
+          {numericCount} numeric
+          columns •{" "}
+          {categoricalCount} categorical
+          columns
+        </Text>
+      </View>
+
+      {/* Insights */}
+      {insights.length > 0 ? (
+        insights.map(
+          (
+            insight: string,
+            index: number
+          ) => (
+            <View
+              key={index}
+              className="mb-4 rounded-2xl bg-[#0F1A33] p-5"
+            >
+              <Text className="text-base leading-7 text-[#E5E7EB]">
+                {insight}
+              </Text>
+            </View>
+          )
+        )
+      ) : (
+        <View className="rounded-2xl bg-[#0F1A33] p-5">
+          <Text className="text-center text-[#9CA3AF]">
+            No insights available for
+            this dataset.
+          </Text>
         </View>
+      )}
 
-        <Text className="mb-3 leading-5 text-[#E5E7EB]">
-          Revenue increased by 23.5% compared to the previous quarter.
-          The growth is primarily driven by the Western region,
-          which accounts for 42% of total sales.
+      {/* Status */}
+      <View className="mt-2 rounded-2xl border border-[#22C55E] bg-[#0F1A33] p-5">
+        <Text className="font-semibold text-white">
+          Analysis Complete
         </Text>
 
-        <View className="flex-row justify-between"><Text className="text-xs text-[#9CA3AF]">Confidence: 94%</Text><Text className="text-xs text-[#7C5CFF]">View Details →</Text>
-        </View>
-
-      </View>
-
-      {/* Top Category */}
-      <View className="mb-[14px] rounded-[14px] bg-[#0F1A33] p-4"><Text className="font-semibold text-[#E5E7EB]">Top Category</Text><Text className="mb-1.5 text-xs text-[#3B82F6]">Trending</Text>
-
-        <Text className="text-[#9CA3AF]">
-          Electronics leads with 38% market share
+        <Text className="mt-2 text-[#9CA3AF]">
+          Dataset processed
+          successfully and is ready
+          for exploration and
+          visualization.
         </Text>
       </View>
-
-      {/* Alert */}
-      <View className="mb-[14px] rounded-[14px] border border-[#F59E0B] bg-[#0F1A33] p-4"><Text className="font-semibold text-[#E5E7EB]">Attention Needed</Text><Text className="mb-1.5 text-xs text-[#F59E0B]">Alert</Text>
-
-        <Text className="text-[#9CA3AF]">
-          Q4 inventory levels below threshold
-        </Text>
-      </View>
-
     </ScrollView>
   );
 }

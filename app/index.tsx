@@ -23,7 +23,7 @@ export default function SplashScreen() {
     try{
       await api.get('/auth/verify');
       setTimeout(() => {
-        router.replace('/(tabs)/home')
+        router.replace('/home')
       }, 3000);
     } catch {
       await SecureStore.deleteItemAsync("token")
@@ -46,10 +46,6 @@ export default function SplashScreen() {
 
       <Text className="text-[15px] text-[#9CA3AF]">
         Data Analytics Platform
-      </Text>
-
-      <Text className="mb-10 text-[13px] text-[#6B7280]">
-        Powered by AI Intelligence
       </Text>
 
     </LinearGradient>

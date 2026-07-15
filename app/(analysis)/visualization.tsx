@@ -1,116 +1,198 @@
-import { View, Text, ScrollView, Dimensions } from "react-native";
-import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
+import { ScrollView, Text, View, Dimensions } from "react-native";
+import { useDataset } from "@/context/DatasetContext";
+
+import PieChartComponent from "@/components/charts/PieChartComponent";
+import BarChartComponent from "@/components/charts/BarChartComponent";
+import LineChartComponent from "@/components/charts/LineChartComponent";
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function Visualization() {
-  
-  const barData = {
-    labels: ["North", "South", "East", "West", "Central"],
-    datasets: [{ data: [2400, 3200, 1800, 4200, 2700] }],
+  const { uploadResponse } = useDataset();
+
+  const rows = uploadResponse?.data || [];
+
+  if (rows.length === 0) {
+    return (
+      <View className="flex-1 items-center justify-center bg-[#050E1F]">
+        <Text className="text-gray-400">
+          No data available
+        </Text>
+      </View>
+    );
+  }
+
+  const columns = Object.keys(rows[0]);
+
+  const numericColumns: string[] = [];
+  const categoryColumns: string[] = [];
+  const booleanColumns: string[] = [];
+  const dateColumns: string[] = [];
+
+  columns.forEach((column) => {
+    const value = rows[0][column];
+
+    if (typeof value === "number") {
+      numericColumns.push(column);
+    } else if (typeof value === "boolean") {
+      booleanColumns.push(column);
+    } else if (
+      typeof value === "string" &&
+      !isNaN(Date.parse(value))
+    ) {
+      dateColumns.push(column);
+    } else {
+      const uniqueValues = [
+        ...new Set(rows.map((row:any) => row[column])),
+      ];
+
+      if (uniqueValues.length <= 15) {
+        categoryColumns.push(column);
+      }
+    }
+  });
+
+  const pieColumn =
+    booleanColumns[0] || categoryColumns[0];
+
+  const barCategory = categoryColumns[0];
+  const barNumeric = numericColumns[0];
+
+  const lineDate = dateColumns[0];
+  const lineNumeric = numericColumns[0];
+
+  const chartConfig = {
+    backgroundGradientFrom: "#0F1A33",
+    backgroundGradientTo: "#0F1A33",
+    decimalPlaces: 0,
+    color: (opacity = 1) =>
+      `rgba(34, 197, 94, ${opacity})`,
+    labelColor: (opacity = 1) =>
+      `rgba(229, 231, 235, ${opacity})`,
+    propsForBackgroundLines: {
+      stroke: "#1E293B",
+    },
   };
 
-  const lineData = {
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    datasets: [{ data: [100, 200, 300, 380, 450, 520, 600] }],
-  };
+  // PIE DATA
+  const pieData = pieColumn
+    ? Object.entries(
+        rows.reduce((acc: any, row: any) => {
+          const key = String(row[pieColumn]);
 
-  const pieData = [
-    {
-      name: "Product A",
-      population: 40,
-      color: "#7C5CFF",
-      legendFontColor: "#E5E7EB",
-      legendFontSize: 12,
-    },
-    {
-      name: "Product B",
-      population: 33,
-      color: "#3B82F6",
-      legendFontColor: "#E5E7EB",
-      legendFontSize: 12,
-    },
-    {
-      name: "Product C",
-      population: 27,
-      color: "#EC4899",
-      legendFontColor: "#E5E7EB",
-      legendFontSize: 12,
-    },
-  ];
+          acc[key] = (acc[key] || 0) + 1;
+
+          return acc;
+        }, {})
+      ).map(([name, count], index) => ({
+        name,
+        population: count,
+        color: [
+          "#22C55E",
+          "#3B82F6",
+          "#F59E0B",
+          "#EF4444",
+          "#8B5CF6",
+          "#06B6D4",
+        ][index % 6],
+        legendFontColor: "#E5E7EB",
+        legendFontSize: 12,
+      }))
+    : [];
+
+  // BAR DATA
+  const barData =
+    barCategory && barNumeric
+      ? {
+          labels: rows
+            .slice(0, 8)
+            .map((row:any) =>
+              String(row[barCategory]).slice(0, 8)
+            ),
+
+          datasets: [
+            {
+              data: rows
+                .slice(0, 8)
+                .map((row:any) =>
+                  Number(row[barNumeric]) || 0
+                ),
+            },
+          ],
+        }
+      : null;
+
+  // LINE DATA
+  const lineData =
+    lineDate && lineNumeric
+      ? {
+          labels: rows
+            .slice(0, 8)
+            .map((row:any) =>
+              String(row[lineDate]).slice(5, 10)
+            ),
+
+          datasets: [
+            {
+              data: rows
+                .slice(0, 8)
+                .map((row:any) =>
+                  Number(row[lineNumeric]) || 0
+                ),
+            },
+          ],
+        }
+      : null;
 
   return (
-    <View className="flex-1 bg-[#050E1F] p-2.5">
+    <ScrollView
+      className="flex-1 bg-[#050E1F] p-5"
+      showsVerticalScrollIndicator={false}
+    >
+      <Text className="mb-6 text-2xl font-semibold text-[#E5E7EB]">
+        Visualizations
+      </Text>
 
-        <Text className="my-[25px] px-2.5 text-2xl font-semibold text-[#E5E7EB]">Visualizations</Text>
+      {pieData.length > 0 && (
+        <View className="mb-6 rounded-2xl bg-[#0F1A33] p-4">
+          <Text className="mb-4 text-lg font-semibold text-white">
+            {pieColumn} Distribution
+          </Text>
 
-        <ScrollView className="flex-1 bg-[#050E1F] px-[5px] pb-[100px]" >
+          <PieChartComponent
+            data={pieData}
+            chartConfig={chartConfig}
+          />
+        </View>
+      )}
 
-            {/* Bar Chart */}
-            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
-                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Sales by Region</Text><Text className="text-xs text-[#9CA3AF]">Bar Chart</Text>
-                </View>
+      {barData && (
+        <View className="mb-6 rounded-2xl bg-[#0F1A33] p-4">
+          <Text className="mb-4 text-lg font-semibold text-white">
+            {barCategory} vs {barNumeric}
+          </Text>
 
-                <BarChart
-                data={barData}
-                width={screenWidth - 60}
-                height={180}
-                yAxisLabel="$"
-                yAxisSuffix=""
-                chartConfig={chartConfig}
-                style={{ borderRadius: 12, padding: 2 }}
-                />
-            </View>
+          <BarChartComponent
+            data={barData}
+            width={screenWidth}
+            chartConfig={chartConfig}
+          />
+        </View>
+      )}
 
-            {/* Line Chart */}
-            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
-                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Trend Analysis</Text><Text className="text-xs text-[#9CA3AF]">Line Chart</Text>
-                </View>
+      {lineData && (
+        <View className="mb-6 rounded-2xl bg-[#0F1A33] p-4 mb-24">
+          <Text className="mb-4 text-lg font-semibold text-white">
+            {lineNumeric} Trend
+          </Text>
 
-                <LineChart
-                data={lineData}
-                width={screenWidth - 60}
-                height={180}
-                chartConfig={chartConfig}
-                style={{ borderRadius: 12, padding: 2 }}
-                />
-            </View>
-
-            {/* Pie Chart */}
-            <View className="mb-2.5 items-stretch justify-center rounded-[14px] bg-[#0F1A33] p-2.5">
-                <View className="mb-2.5 flex-row justify-between"><Text className="font-semibold text-[#E5E7EB]">Category Distribution</Text><Text className="text-xs text-[#9CA3AF]">Pie Chart</Text>
-                </View>
-
-                <PieChart
-                data={pieData}
-                width={screenWidth - 60}
-                height={180}
-                accessor="population"
-                backgroundColor="transparent"
-                chartConfig={chartConfig}
-                paddingLeft="10"
-                />
-            </View>
-
-            </ScrollView>
-    </View>
-     
+          <LineChartComponent
+            data={lineData}
+            width={screenWidth}
+            chartConfig={chartConfig}
+          />
+        </View>
+      )}
+    </ScrollView>
   );
 }
-
-const chartConfig = {
-  backgroundGradientFrom: "#050E1F",
-  backgroundGradientTo: "#050E1F",
-
-  decimalPlaces: 0,
-
-  color: (opacity = 1) => `rgba(124,92,255, ${opacity})`,
-
-  labelColor: () => "#9CA3AF",
-
-  propsForDots: {
-    r: "4",
-    strokeWidth: "2",
-    stroke: "#7C5CFF",
-  },
-};

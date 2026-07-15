@@ -55,7 +55,7 @@ export default function Login() {
         text1: "Success",
         text2: "Logged in successfully",
       });
-      router.replace('/(tabs)/home');
+      router.replace('/home');
     } catch (err: any) {
       Toast.show({
         type: "error",
@@ -82,7 +82,7 @@ export default function Login() {
         text1: "Success",
         text2: "Guest logged in successfully",
       });
-      router.replace('/(tabs)/home');
+      router.replace('/home');
     } catch(err:any){
       Toast.show({
         type: "error",

@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 const baseURL = process.env.EXPO_PUBLIC_API_URL;
+// console.log("API URL =", baseURL);
 
 if (!baseURL) {
   throw new Error('EXPO_PUBLIC_API_URL is not configured');
