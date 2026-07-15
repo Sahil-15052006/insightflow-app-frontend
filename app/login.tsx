@@ -5,7 +5,15 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import { useState } from 'react';
 import api from './api';
 import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store';
+
+const getErrorMessage = (error: any) => {
+  if (!error?.response) {
+    return 'Cannot reach the server. Check that the backend is running and the API URL is correct.';
+  }
+
+  return error.response.data?.message || 'Something went wrong. Please try again.';
+};
 
 export default function Login() {
 
@@ -15,65 +23,72 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   const login = async () => {
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!normalizedEmail || !password) {
+      Toast.show({
+        type: "info",
+        text1: "Alert",
+        text2: "Email and password are required",
+      });
+      return;
+    }
+
     try {
-      setLoading(true)
-      if (!(email && password)) {
-        Toast.show({
-          type: "info",
-          text1: "Alert",
-          text2: "All fields are required"
-        })
-      }
+      setLoading(true);
       const res = await api.post('/auth/login', {
-        email,
-        password
-      })
-      await SecureStore.setItemAsync("token", res.data.token)
+        email: normalizedEmail,
+        password,
+      });
+
+      if (!res.data?.token) {
+        throw new Error('Login response did not include a token');
+      }
+
+      await SecureStore.setItemAsync("token", res.data.token);
       Toast.show({
         type: "success",
         text1: "Success",
-        text2: "Logged in successfully"
-      })
-      router.replace('/(tabs)/home')
-      console.log('logged in ');
-      
+        text2: "Logged in successfully",
+      });
+      router.replace('/(tabs)/home');
     } catch (err: any) {
-      
       Toast.show({
         type: "error",
         text1: "Error",
-        text2: err.response.data.message || 'something went wrong'
-      })
-
-      console.log('Error :',err.response.data.message);
-      
+        text2: getErrorMessage(err),
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const guest=async()=>{
     try{
       setLoading(true)
-      const res = await api.post('/auth/guest')
-      await SecureStore.setItemAsync('token',res.data.token)
+      const res = await api.post('/auth/guest');
+
+      if (!res.data?.token) {
+        throw new Error('Guest login response did not include a token');
+      }
+
+      await SecureStore.setItemAsync('token', res.data.token);
             Toast.show({
         type: "success",
         text1: "Success",
-        text2: "Guest logged in successfully"
-      })
-      router.replace('/(tabs)/home')
+        text2: "Guest logged in successfully",
+      });
+      router.replace('/(tabs)/home');
     } catch(err:any){
-        Toast.show({
+      Toast.show({
         type: "error",
         text1: "Error",
-        text2: err.response.data.message || 'something went wrong'
-      })
-      console.log('Error :',err.response.data.message)
+        text2: getErrorMessage(err),
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
@@ -87,6 +102,9 @@ export default function Login() {
         onChangeText={setEmail}
         placeholder="Email Address"
         placeholderTextColor="#6B7280"
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
         style={styles.input}
         />
 
@@ -103,7 +121,7 @@ export default function Login() {
 
       <TouchableOpacity onPress={() => router.push("/register")}>
         <Text style={styles.registerText}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Text style={styles.registerLink}>Create Account</Text>
         </Text>
       </TouchableOpacity>

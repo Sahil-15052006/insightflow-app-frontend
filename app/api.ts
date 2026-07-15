@@ -1,8 +1,14 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
+const baseURL = process.env.EXPO_PUBLIC_API_URL;
+
+if (!baseURL) {
+  throw new Error('EXPO_PUBLIC_API_URL is not configured');
+}
+
 const api = axios.create({
-  baseURL: "http://10.188.123.16:5000"
+  baseURL,
 });
 
 api.interceptors.request.use(async (config) => {

@@ -7,6 +7,14 @@ import BackButton from "../components/BackButton";
 import Button from "../components/Button";
 import LoadingOverlay from "../components/LoadingOverlay";
 
+const getErrorMessage = (error: any) => {
+  if (!error?.response) {
+    return "Cannot reach the server. Check that the backend is running and the API URL is correct.";
+  }
+
+  return error.response.data?.message || "Something went wrong. Please try again.";
+};
+
 export default function Register() {
   const router = useRouter();
   const [checked, setChecked] = useState(false);
@@ -14,47 +22,74 @@ export default function Register() {
   const [email,setEmail]=useState('')
   const [password,setPassword]=useState('')
   const [confirmPassword,setConfirmPassword]=useState('')
-  const [laoding,setLoading]=useState(false)
+  const [loading,setLoading]=useState(false)
 
   const register = async()=>{
-    if (!(name && email && password && confirmPassword && checked && password===confirmPassword)) {
+    const normalizedName = name.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!(normalizedName && normalizedEmail && password && confirmPassword)) {
       return Toast.show({
         type:"error",
         text1:"Error",
-        text2:"All field are required"
-      })
+        text2:"All fields are required",
+      });
     }
+
+    if (!/^\S+@\S+\.\S+$/.test(normalizedEmail)) {
+      return Toast.show({
+        type:"error",
+        text1:"Error",
+        text2:"Enter a valid email address",
+      });
+    }
+
+    if (password !== confirmPassword) {
+      return Toast.show({
+        type:"error",
+        text1:"Error",
+        text2:"Passwords do not match",
+      });
+    }
+
+    if (!checked) {
+      return Toast.show({
+        type:"error",
+        text1:"Error",
+        text2:"Please accept the Terms of Service and Privacy Policy",
+      });
+    }
+
     try{
-        setLoading(true)   
-        await api.post('/auth/register',{
-          name,
-          email,
-          password
-        })
-        Toast.show({
-          type: "success",
-          text1: "Success",
-          text2: "Registered successfully",
-        });
-        router.push("/login")
+      setLoading(true);   
+      await api.post('/auth/register',{
+        name: normalizedName,
+        email: normalizedEmail,
+        password,
+      });
+      Toast.show({
+        type: "success",
+        text1: "Success",
+        text2: "Registered successfully. Please sign in.",
+      });
+      router.replace("/login");
 
     }catch(err:any){
-        Toast.show({
-          type: "error",
-          text1: "Error",
-          text2: err.response?.data?.message || "Something went wrong",
-        });
-        console.log(`Failed to register user : ${err.response?.data || err.message}`)
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: getErrorMessage(err),
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  } 
+  };
   
 
   return (
     <View style={styles.container}>
 
-      {laoding && <LoadingOverlay/>}
+      {loading && <LoadingOverlay/>}
 
       <BackButton/>      
 
@@ -76,6 +111,9 @@ export default function Register() {
         onChangeText={setEmail}
         placeholder="you@company.com"
         placeholderTextColor="#6B7280"
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
         style={styles.input}
       />
 
